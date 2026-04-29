@@ -1,0 +1,9 @@
+{
+  "name": "موقع أمان إيفر الإلكتروني",
+  "description": "A comprehensive RTL Arabic medical application landing page featuring hero sliders, service grids, and network listings.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "C7": [],
+  "aq": []
+}

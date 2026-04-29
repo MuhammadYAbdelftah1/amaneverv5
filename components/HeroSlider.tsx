@@ -255,18 +255,11 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ onOpenBookings }) => {
                         />
                       </a>
                       <a href="#" className="transition-transform hover:scale-105 active:scale-95">
-                        <div className="bg-black text-white px-2 md:px-3 h-8 md:h-12 rounded-[4px] md:rounded-[6px] flex items-center gap-1.5 md:gap-2 border border-white/10">
-                          <img 
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Huawei_AppGallery_logo.svg/512px-Huawei_AppGallery_logo.svg.png" 
-                            alt="AppGallery" 
-                            className="h-4 md:h-6 w-auto" 
-                            referrerPolicy="no-referrer"
-                          />
-                          <div className="flex flex-col leading-tight">
-                            <span className="text-[5px] md:text-[7px] uppercase font-bold opacity-80">Explore it on</span>
-                            <span className="text-[10px] md:text-[13px] font-black tracking-tight">AppGallery</span>
-                          </div>
-                        </div>
+                        <img 
+                          src="/huawei-appgallery-ar.png" 
+                          alt="AppGallery" 
+                          className="h-10 md:h-14 w-auto object-contain" 
+                        />
                       </a>
                     </motion.div>
                   </div>

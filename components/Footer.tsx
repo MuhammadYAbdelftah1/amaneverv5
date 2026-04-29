@@ -289,19 +289,12 @@ const Footer: React.FC = () => {
                 />
               </a>
               <a href="#" className="transition-transform hover:scale-105 active:scale-95 w-fit">
-                <div className="bg-black text-white px-3 h-10 md:h-12 rounded-[6px] flex items-center gap-2 border border-white/10">
-                  <img 
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Huawei_AppGallery_logo.svg/512px-Huawei_AppGallery_logo.svg.png" 
-                    alt="AppGallery" 
-                    className="h-5 md:h-6 w-auto" 
-                    referrerPolicy="no-referrer"
-                    onError={handleImageError}
-                  />
-                  <div className="flex flex-col leading-tight">
-                    <span className="text-[7px] md:text-[8px] uppercase font-bold opacity-80">Explore it on</span>
-                    <span className="text-[12px] md:text-[14px] font-black tracking-tight">AppGallery</span>
-                  </div>
-                </div>
+                <img 
+                  src="/huawei-appgallery-ar.png" 
+                  alt="AppGallery" 
+                  className="h-12 md:h-14 w-auto object-contain" 
+                  onError={handleImageError}
+                />
               </a>
             </div>
           </div>

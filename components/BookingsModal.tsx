@@ -161,18 +161,11 @@ const BookingsModal: React.FC<BookingsModalProps> = ({ isOpen, onClose }) => {
 
                   {/* AppGallery */}
                   <a href="#" className="transition-transform hover:scale-105 active:scale-95">
-                    <div className="bg-black text-white px-3 md:px-4 h-10 md:h-14 rounded-[6px] md:rounded-[8px] flex items-center gap-2 md:gap-3 border border-white/10 shadow-lg">
-                      <img 
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Huawei_AppGallery_logo.svg/512px-Huawei_AppGallery_logo.svg.png" 
-                        alt="AppGallery" 
-                        className="h-5 md:h-7 w-auto" 
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="flex flex-col leading-tight">
-                        <span className="text-[7px] md:text-[9px] uppercase font-bold opacity-80">Explore it on</span>
-                        <span className="text-[12px] md:text-[16px] font-black tracking-tight">AppGallery</span>
-                      </div>
-                    </div>
+                    <img 
+                      src="/huawei-appgallery-ar.png" 
+                      alt="AppGallery" 
+                      className="h-12 md:h-16 w-auto object-contain" 
+                    />
                   </a>
                 </div>
               </div>

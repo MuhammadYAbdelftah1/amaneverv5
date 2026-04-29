@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
+import AuthModal from './AuthModal';
 
 interface HeaderProps {
   onOpenBookings?: () => void;
@@ -13,6 +14,8 @@ const Header: React.FC<HeaderProps> = ({ onOpenBookings, onOpenDoctorPlatform })
   const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -139,10 +142,20 @@ const Header: React.FC<HeaderProps> = ({ onOpenBookings, onOpenDoctorPlatform })
               <span className="hidden lg:inline">{i18n.language === 'ar' ? 'EN' : 'ع'}</span>
             </button>
 
-            <button className="px-2.5 lg:px-3 xl:px-4 py-1.5 rounded-full border border-[#4d8080] text-[#4d8080] font-bold text-[10px] lg:text-[11px] transition-all whitespace-nowrap hover:bg-teal-50">
+            <button className="px-2.5 lg:px-3 xl:px-4 py-1.5 rounded-full border border-[#4d8080] text-[#4d8080] font-bold text-[10px] lg:text-[11px] transition-all whitespace-nowrap hover:bg-teal-50"
+              onClick={() => {
+                setAuthMode('login');
+                setAuthModalOpen(true);
+              }}
+            >
               {t('header.login')}
             </button>
-            <button className="px-3 lg:px-4 xl:px-5 py-1.5 rounded-full bg-[#4d8080] text-white font-bold text-[10px] lg:text-[11px] hover:bg-[#3d6666] transition-all shadow-lg shadow-teal-900/20 whitespace-nowrap">
+            <button className="px-3 lg:px-4 xl:px-5 py-1.5 rounded-full bg-[#4d8080] text-white font-bold text-[10px] lg:text-[11px] hover:bg-[#3d6666] transition-all shadow-lg shadow-teal-900/20 whitespace-nowrap"
+              onClick={() => {
+                setAuthMode('signup');
+                setAuthModalOpen(true);
+              }}
+            >
               {t('header.subscribe')}
             </button>
           </div>
@@ -179,10 +192,22 @@ const Header: React.FC<HeaderProps> = ({ onOpenBookings, onOpenDoctorPlatform })
                 </a>
               ))}
               <div className="pt-6 border-t border-gray-100 flex flex-col gap-4">
-                <button className="w-full py-4 rounded-xl border-2 border-[#4d8080] text-[#4d8080] font-black hover:bg-teal-50 transition-colors">
+                <button className="w-full py-4 rounded-xl border-2 border-[#4d8080] text-[#4d8080] font-black hover:bg-teal-50 transition-colors"
+                  onClick={() => {
+                    setAuthMode('login');
+                    setAuthModalOpen(true);
+                    setIsOpen(false);
+                  }}
+                >
                   {t('header.login')}
                 </button>
-                <button className="w-full py-4 rounded-xl bg-[#4d8080] text-white font-black shadow-xl active:scale-95 transition-transform">
+                <button className="w-full py-4 rounded-xl bg-[#4d8080] text-white font-black shadow-xl active:scale-95 transition-transform"
+                  onClick={() => {
+                    setAuthMode('signup');
+                    setAuthModalOpen(true);
+                    setIsOpen(false);
+                  }}
+                >
                   {t('header.subscribe')}
                 </button>
               </div>
@@ -190,6 +215,13 @@ const Header: React.FC<HeaderProps> = ({ onOpenBookings, onOpenDoctorPlatform })
           </div>
         )}
       </div>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)}
+        initialMode={authMode}
+      />
     </header>
   );
 };

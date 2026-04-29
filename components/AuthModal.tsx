@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Mail, Phone, Hash, Eye, EyeOff, ArrowRight, Shield, CheckCircle2 } from 'lucide-react';
+import { X, User, Mail, Phone, Hash, Eye, EyeOff, ArrowRight, Shield, CheckCircle2, UserCircle, CreditCard, Stethoscope, Building2, Briefcase } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface AuthModalProps {
@@ -15,7 +15,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
   
-  const [mode, setMode] = useState<'login' | 'signup' | 'otp'>(initialMode);
+  const [mode, setMode] = useState<'role-select' | 'login' | 'signup' | 'otp'>('role-select');
   const [userRole, setUserRole] = useState<UserRole>('visitor');
   const [loginMethod, setLoginMethod] = useState<LoginMethod>('phone');
   const [showPassword, setShowPassword] = useState(false);
@@ -35,10 +35,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
   if (!isOpen) return null;
 
   const userRoles = [
-    { value: 'visitor', label: 'زائر', icon: '👤', desc: 'تصفح الخدمات والعروض' },
-    { value: 'doctor', label: 'طبيب', icon: '👨‍⚕️', desc: 'انضم كمقدم خدمة طبية' },
-    { value: 'facility', label: 'منشأة طبية', icon: '🏥', desc: 'سجل منشأتك الطبية' },
-    { value: 'affiliate', label: 'مسوق بالعمولة', icon: '💼', desc: 'اربح من التسويق' }
+    { value: 'visitor', label: 'زائر', icon: UserCircle, desc: 'تصفح الخدمات والعروض', color: 'bg-blue-50 border-blue-200 hover:border-blue-400', iconColor: 'text-blue-600' },
+    { value: 'subscriber', label: 'مشترك', icon: CreditCard, desc: 'لديك بطاقة أمان إيفر', color: 'bg-teal-50 border-teal-200 hover:border-teal-400', iconColor: 'text-teal-600' },
+    { value: 'doctor', label: 'طبيب', icon: Stethoscope, desc: 'مقدم خدمة طبية', color: 'bg-green-50 border-green-200 hover:border-green-400', iconColor: 'text-green-600' },
+    { value: 'facility', label: 'منشأة طبية', icon: Building2, desc: 'مستشفى أو مركز طبي', color: 'bg-purple-50 border-purple-200 hover:border-purple-400', iconColor: 'text-purple-600' },
+    { value: 'affiliate', label: 'مسوق بالعمولة', icon: Briefcase, desc: 'اربح من التسويق', color: 'bg-orange-50 border-orange-200 hover:border-orange-400', iconColor: 'text-orange-600' }
   ];
 
   const loginMethods = [
@@ -47,6 +48,17 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     { value: 'username', label: 'اسم المستخدم', icon: User, placeholder: 'username' },
     { value: 'id', label: 'رقم الهوية', icon: Hash, placeholder: '1xxxxxxxxx' }
   ];
+
+  const handleRoleSelect = (role: UserRole) => {
+    setUserRole(role);
+    // المشترك يروح مباشرة للـ Login
+    if (role === 'subscriber') {
+      setMode('login');
+    } else {
+      // باقي الأنواع يختاروا بين Login و Signup
+      setMode(initialMode);
+    }
+  };
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
@@ -81,6 +93,54 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
       setMode('otp');
     }
   };
+
+  const renderRoleSelection = () => (
+    <div className="space-y-6">
+      {/* Welcome Message */}
+      <div className="text-center space-y-2">
+        <h3 className="text-2xl font-black text-gray-900">
+          مرحباً بك في أمان إيفر
+        </h3>
+        <p className="text-gray-600">
+          اختر نوع حسابك للمتابعة
+        </p>
+      </div>
+
+      {/* Role Cards */}
+      <div className="grid grid-cols-1 gap-3">
+        {userRoles.map((role) => {
+          const IconComponent = role.icon;
+          return (
+            <button
+              key={role.value}
+              onClick={() => handleRoleSelect(role.value as UserRole)}
+              className={`p-5 rounded-2xl border-2 transition-all text-right hover:shadow-lg transform hover:scale-[1.02] ${role.color}`}
+            >
+              <div className="flex items-center gap-4">
+                <div className={`flex-shrink-0 ${role.iconColor}`}>
+                  <IconComponent size={40} strokeWidth={2} />
+                </div>
+                <div className="flex-1">
+                  <div className="font-black text-lg mb-1">{role.label}</div>
+                  <div className="text-sm text-gray-600">{role.desc}</div>
+                </div>
+                <div className="text-gray-400">
+                  <ArrowRight size={24} style={{ transform: isRtl ? 'scaleX(-1)' : 'none' }} />
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Info Note */}
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-right">
+        <p className="text-sm text-gray-700">
+          💡 <strong>نصيحة:</strong> إذا كنت مشتركاً في بطاقة أمان إيفر، اختر "مشترك" لتسجيل الدخول مباشرة.
+        </p>
+      </div>
+    </div>
+  );
 
   const renderLoginForm = () => (
     <div className="space-y-6">
@@ -186,37 +246,46 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           </button>
         </p>
       </div>
+
+      {/* Back to Role Selection */}
+      <div className="text-center pt-2 border-t border-gray-200">
+        <button
+          onClick={() => setMode('role-select')}
+          className="text-gray-500 text-sm hover:text-gray-700 font-bold"
+        >
+          ← العودة لاختيار نوع الحساب
+        </button>
+      </div>
     </div>
   );
 
-  const renderSignupForm = () => (
-    <div className="space-y-6">
-      {step === 1 ? (
-        <>
-          {/* User Role Selection */}
-          <div className="space-y-3">
-            <label className="block text-sm font-bold text-gray-700 text-right">
-              اختر نوع الحساب
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              {userRoles.map((role) => (
-                <button
-                  key={role.value}
-                  onClick={() => setUserRole(role.value as UserRole)}
-                  className={`p-4 rounded-xl border-2 transition-all text-right ${
-                    userRole === role.value
-                      ? 'border-[#4d8080] bg-teal-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="text-3xl mb-2">{role.icon}</div>
-                  <div className="font-black text-sm mb-1">{role.label}</div>
-                  <div className="text-xs text-gray-500">{role.desc}</div>
-                </button>
-              ))}
+  const renderSignupForm = () => {
+    const selectedRole = userRoles.find(r => r.value === userRole);
+    const SelectedIcon = selectedRole?.icon || UserCircle;
+    
+    return (
+      <div className="space-y-6">
+        {/* Show selected role */}
+        <div className="bg-teal-50 border border-teal-200 rounded-xl p-3 flex items-center gap-3">
+          <div className={`${selectedRole?.iconColor || 'text-teal-600'}`}>
+            <SelectedIcon size={32} strokeWidth={2} />
+          </div>
+          <div className="flex-1 text-right">
+            <div className="text-sm text-gray-600">نوع الحساب المختار:</div>
+            <div className="font-black text-[#4d8080]">
+              {selectedRole?.label}
             </div>
           </div>
+          <button
+            onClick={() => setMode('role-select')}
+            className="text-xs text-[#4d8080] hover:underline font-bold"
+          >
+            تغيير
+          </button>
+        </div>
 
+      {step === 1 ? (
+        <>
           {/* Basic Info */}
           <div className="space-y-4">
             <div className="space-y-2">
@@ -361,8 +430,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           </button>
         </p>
       </div>
+
+      {/* Back to Role Selection */}
+      {step === 1 && (
+        <div className="text-center">
+          <button
+            onClick={() => setMode('role-select')}
+            className="text-gray-500 text-sm hover:text-gray-700 font-bold"
+          >
+            ← العودة لاختيار نوع الحساب
+          </button>
+        </div>
+      )}
     </div>
   );
+};
 
   const renderOtpForm = () => (
     <div className="space-y-6">
@@ -437,8 +519,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
   );
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" style={{ paddingTop: '360px' }}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[65vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-100 p-6 flex justify-between items-center">
           <button
@@ -449,11 +531,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           </button>
           <div className="text-right">
             <h2 className="text-2xl font-black text-gray-900">
-              {mode === 'login' ? 'تسجيل الدخول' : mode === 'signup' ? 'إنشاء حساب جديد' : 'التحقق من الهوية'}
+              {mode === 'role-select' ? 'اختر نوع حسابك' : mode === 'login' ? 'تسجيل الدخول' : mode === 'signup' ? 'إنشاء حساب جديد' : 'التحقق من الهوية'}
             </h2>
             {mode === 'signup' && (
               <p className="text-sm text-gray-500 mt-1">
                 الخطوة {step} من 2
+              </p>
+            )}
+            {mode === 'role-select' && (
+              <p className="text-sm text-gray-500 mt-1">
+                ابدأ رحلتك مع أمان إيفر
               </p>
             )}
           </div>
@@ -461,17 +548,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
 
         {/* Content */}
         <div className="p-6">
+          {mode === 'role-select' && renderRoleSelection()}
           {mode === 'login' && renderLoginForm()}
           {mode === 'signup' && renderSignupForm()}
           {mode === 'otp' && renderOtpForm()}
         </div>
 
         {/* Note for Subscribers */}
-        {mode === 'signup' && (
+        {mode === 'role-select' && (
           <div className="px-6 pb-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-right">
-              <p className="text-sm text-blue-800">
-                <strong>ملاحظة:</strong> إذا كنت مشتركاً بالفعل في بطاقة أمان إيفر، يمكنك تسجيل الدخول مباشرة باستخدام رقم جوالك أو بريدك الإلكتروني.
+            <div className="bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200 rounded-xl p-4 text-right">
+              <p className="text-sm text-gray-800">
+                <strong className="text-[#4d8080]">💳 مشترك بالفعل؟</strong> اختر "مشترك" للدخول مباشرة باستخدام رقم جوالك أو بريدك الإلكتروني المسجل في بطاقة أمان إيفر.
               </p>
             </div>
           </div>

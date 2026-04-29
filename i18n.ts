@@ -1387,7 +1387,12 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
+    lng: 'ar', // اللغة الافتراضية
     fallbackLng: 'ar',
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage']
+    },
     interpolation: {
       escapeValue: false
     }
